@@ -86,6 +86,7 @@ void rlog_set_level(int level)
 
 void rlog_set_stream(rlog_out out)
 {
+    //TODO add mutex ?
     switch (out)
     {
     case log_to_stdout:

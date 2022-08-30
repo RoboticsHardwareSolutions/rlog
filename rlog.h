@@ -1,6 +1,10 @@
 #ifndef __RLOG_H
 #define __RLOG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "string.h"
 
 #define RLOG_ERROR_PRINT 0x1
@@ -64,5 +68,9 @@ size_t rlog_read_from_buffer(void* data, size_t count);
 void rlog_destroy(void);
 
 #endif  // defined(RLOG_BUFFER_SUPPORT)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
