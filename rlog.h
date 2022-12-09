@@ -35,6 +35,11 @@ typedef enum
 void rlog_set_stream(rlog_out out);
 
 /**
+ * @return current stream
+ */
+rlog_out rlog_get_stream(void);
+
+/**
  * @param level use mask for enable or disable ERROR / WARNING / INFO / DEBUG - message
  * Example
  *  rlog_set_level(RLOG_DEBUG_PRINT | RLOG_ERROR_PRINT ); // enabled ERROR and DEBUG message

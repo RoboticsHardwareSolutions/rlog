@@ -84,9 +84,23 @@ void rlog_set_level(int level)
     log_level = level;
 }
 
+rlog_out rlog_get_stream(void)
+{
+    switch (fd)
+    {
+    case STDOUT_FILENO:
+        return log_to_stdout;
+    case STDERR_FILENO:
+        return log_to_stderr;
+    case -1:
+        return log_to_buffer;
+    default:
+        return log_to_stdout;
+    }
+}
 void rlog_set_stream(rlog_out out)
 {
-    //TODO add mutex ?
+    // TODO add mutex ?
     switch (out)
     {
     case log_to_stdout:
