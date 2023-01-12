@@ -92,8 +92,10 @@ rlog_out rlog_get_stream(void)
         return log_to_stdout;
     case STDERR_FILENO:
         return log_to_stderr;
+#if defined(RLOG_BUFFER_SUPPORT)
     case -1:
         return log_to_buffer;
+#endif
     default:
         return log_to_stdout;
     }
