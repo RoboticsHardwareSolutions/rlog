@@ -21,8 +21,8 @@ pthread_mutex_t mutex;
 #endif  // defined(RLOG_BUFFER_SUPPORT)
 
 char         data_time_string[30] = {0};
-static int   fd;
-static int   log_level          = 0;
+static int   fd                 = STDOUT_FILENO;
+static int   log_level          = RLOG_ERROR_PRINT | RLOG_WARNING_PRINT | RLOG_INFO_PRINT | RLOG_DEBUG_PRINT | RLOG_TIME_PRINT;
 static char* log_level_string[] = {"", " ERROR ", "WARNING", "", " INFO  ", "", "", "", " DEBUG "};
 static int   log_level_color[]  = {0, 31, 33, 0, 32, 0, 0, 0, 36};
 
