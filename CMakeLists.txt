@@ -1,4 +1,13 @@
-add_library(rlog rlog.c rlog.h)
+cmake_minimum_required(VERSION 3.24)
+project(rlog C)
+set(CMAKE_C_STANDARD 11)
+
+
+add_library(${PROJECT_NAME} rlog.c rlog.h)
+
+target_include_directories(${PROJECT_NAME}
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (MSVC OR MSYS OR MINGW)
     target_compile_definitions(rlog PUBLIC -DLOG_FOR_WINDOWS)
