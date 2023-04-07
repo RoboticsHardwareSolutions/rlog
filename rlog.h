@@ -1,5 +1,5 @@
-#ifndef __RLOG_H
-#define __RLOG_H
+#ifndef __RLOG_H__
+#define __RLOG_H__
 
 #ifdef __cplusplus
 extern "C" {
