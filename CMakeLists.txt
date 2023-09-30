@@ -10,13 +10,15 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (MSVC OR MSYS OR MINGW)
-    target_compile_definitions(rlog PUBLIC -DLOG_FOR_WINDOWS)
+    target_compile_definitions(rlog PUBLIC -DRLOG_FOR_WINDOWS)
 endif ()
 
 if (APPLE)
-    target_compile_definitions(rlog PUBLIC -DLOG_FOR_APPLE)
+    target_compile_definitions(rlog PUBLIC -DRLOG_FOR_APPLE)
 endif ()
 
 if (UNIX AND NOT APPLE)
-    target_compile_definitions(rlog PUBLIC -DLOG_FOR_UNIX)
+    target_compile_definitions(rlog PUBLIC -DRLOG_FOR_UNIX)
 endif ()
+
+

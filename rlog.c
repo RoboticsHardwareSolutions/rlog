@@ -4,6 +4,11 @@
 #include "stdio.h"
 #include "unistd.h"
 
+#if defined(STM32G474xx) || defined(STM32F103xB) || defined(STM32F072xB) || defined(STM32F091xC) || \
+    defined(STM32F407xx) || defined(STM32F429xx) || defined(STM32F765xx) || defined(STM32F103xE)
+#    include "cmsis_os.h"
+#endif
+
 #if defined(RLOG_BUFFER_SUPPORT)
 #    include "rbuffer.h"
 #    include "stdlib.h"
@@ -21,8 +26,8 @@ pthread_mutex_t mutex;
 #endif  // defined(RLOG_BUFFER_SUPPORT)
 
 char         data_time_string[30] = {0};
-static int   fd                 = STDOUT_FILENO;
-static int   log_level          = RLOG_ERROR_PRINT | RLOG_WARNING_PRINT | RLOG_INFO_PRINT | RLOG_DEBUG_PRINT | RLOG_TIME_PRINT;
+static int   fd                   = STDOUT_FILENO;
+static int   log_level = RLOG_ERROR_PRINT | RLOG_WARNING_PRINT | RLOG_INFO_PRINT | RLOG_DEBUG_PRINT | RLOG_TIME_PRINT;
 static char* log_level_string[] = {"", " ERROR ", "WARNING", "", " INFO  ", "", "", "", " DEBUG "};
 static int   log_level_color[]  = {0, 31, 33, 0, 32, 0, 0, 0, 36};
 
@@ -34,13 +39,23 @@ void rlog_print(int level, const char* format, ...)
     size_t current_size = 0;
     if (log_level & RLOG_TIME_PRINT)
     {
+#if defined(RLOG_FOR_APPLE) || defined(RLOG_FOR_UNIX) || defined(RLOG_FOR_WINDOWS)
         time_t t     = time(NULL);
         current_size = strftime(data_time_string, 20, "%X", localtime(&t));
+#else
+        unsigned long time = osKernelSysTick();
+        current_size       = sprintf(data_time_string, "%12lu", time);
+#endif
     }
     else if (log_level & (RLOG_TIME_PRINT | RLOG_DATA_AND_TIME_PRINT))
     {
+#if defined(RLOG_FOR_APPLE) || defined(RLOG_FOR_UNIX) || defined(RLOG_FOR_WINDOWS)
         time_t t     = time(NULL);
         current_size = strftime(data_time_string, 20, "%x-%X ", localtime(&t));
+#else
+        unsigned long time = osKernelSysTick();
+        current_size       = sprintf(data_time_string, "%12lu", time);
+#endif
     }
 
     if (fd != -1)
@@ -55,7 +70,11 @@ void rlog_print(int level, const char* format, ...)
         va_start(ptr, format);
         vdprintf(fd, format, ptr);
         va_end(ptr);
+#if defined(RLOG_FOR_APPLE) || defined(RLOG_FOR_UNIX) || defined(RLOG_FOR_WINDOWS)
         dprintf(fd, "\n");
+#else
+        printf("\n");
+#endif
     }
 
 #if defined(RLOG_BUFFER_SUPPORT)

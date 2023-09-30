@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-#include "string.h"
 
 #define RLOG_ERROR_PRINT 0x1
 #define RLOG_WARNING_PRINT 0x2
