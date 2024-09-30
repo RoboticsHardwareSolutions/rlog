@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-
 #define RLOG_ERROR_PRINT 0x1
 #define RLOG_WARNING_PRINT 0x2
 #define RLOG_INFO_PRINT 0x4
@@ -17,6 +16,11 @@ extern "C" {
 #define RLOG_WARNING(...) rlog_print(RLOG_WARNING_PRINT, __VA_ARGS__)
 #define RLOG_INFO(...) rlog_print(RLOG_INFO_PRINT, __VA_ARGS__)
 #define RLOG_DEBUG(...) rlog_print(RLOG_DEBUG_PRINT, __VA_ARGS__)
+
+#define RLOGF_ERROR(...) rlog_to_file(RLOG_ERROR_PRINT, __VA_ARGS__)
+#define RLOGF_WARNING(...) rlog_to_file(RLOG_WARNING_PRINT, __VA_ARGS__)
+#define RLOGF_INFO(...) rlog_to_file(RLOG_INFO_PRINT, __VA_ARGS__)
+#define RLOGF_DEBUG(...) rlog_to_file(RLOG_DEBUG_PRINT, __VA_ARGS__)
 
 typedef enum
 {
@@ -50,7 +54,16 @@ void rlog_set_level(int level);
  * @param format
  * @param ...
  */
-void rlog_print(int level, const char* format, ...);
+void rlog_print(int level, const char *format, ...);
+
+/**
+ * @brief Logs to file. Call rlog_set_stream(logs_to_file) first.
+ *
+ * @param level
+ * @param format
+ * @param ...
+ */
+void rlog_to_file(int level, const char *format, ...);
 
 #if defined(RLOG_BUFFER_SUPPORT)
 
@@ -64,7 +77,7 @@ size_t rlog_data_available(void);
  * @param count - amount of data to be read
  * @return - readed amount data
  */
-size_t rlog_read_from_buffer(void* data, size_t count);
+size_t rlog_read_from_buffer(void *data, size_t count);
 
 /*
  * use for delete memory and mutex rlog
@@ -78,4 +91,3 @@ void rlog_destroy(void);
 #endif
 
 #endif
-
