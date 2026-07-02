@@ -25,12 +25,32 @@ pthread_mutex_t mutex;
 
 #endif  // defined(RLOG_BUFFER_SUPPORT)
 
+/* dd/mm/yyyy-HH:mm:ss.ttttttttt + null terminator, up to 30 characters */
 char         data_time_string[30] = {0};
 FILE        *stream;
 static int   fd                 = STDOUT_FILENO;
 static int   log_level          = RLOG_ERROR_PRINT | RLOG_WARNING_PRINT | RLOG_INFO_PRINT | RLOG_DEBUG_PRINT | RLOG_DATA_AND_TIME_PRINT;
 static char *log_level_string[] = {"", " ERROR ", "WARNING", "", " INFO  ", "", "", "", " DEBUG "};
 static int   log_level_color[]  = {0, 31, 33, 0, 32, 0, 0, 0, 36};
+
+#if defined(RLOG_FOR_APPLE) || defined(RLOG_FOR_UNIX) || defined(RLOG_FOR_WINDOWS)
+static size_t format_timestamp(char *restrict output_buffer, size_t output_buffer_size, const char * restrict format)
+{
+    size_t current_size = 0;
+#if defined(RLOG_USE_PRECISE_TIME)
+    #define LOCALTIME_BUF_SIZE (30) /* Buffer size for holding strftime timestamp */
+    char localtime_buf[LOCALTIME_BUF_SIZE] = { 0 };
+    struct timespec ts = { .tv_sec = 0, .tv_nsec = 0 };
+    timespec_get(&ts, TIME_UTC);
+    strftime(localtime_buf, LOCALTIME_BUF_SIZE, format, localtime(&ts.tv_sec)); /* note: localtime returns pointer to internal tm object which is managed externally */
+    current_size = snprintf(output_buffer, output_buffer_size, "%s.%09ld", localtime_buf, ts.tv_nsec);
+#else
+    time_t t     = time(NULL);
+    current_size = strftime(output_buffer, output_buffer_size, format, localtime(&t));
+#endif
+    return current_size;
+}
+#endif
 
 void rlog_print(int level, const char *format, ...)
 {
@@ -41,8 +61,7 @@ void rlog_print(int level, const char *format, ...)
     if (log_level & RLOG_TIME_PRINT)
     {
 #if defined(RLOG_FOR_APPLE) || defined(RLOG_FOR_UNIX) || defined(RLOG_FOR_WINDOWS)
-        time_t t     = time(NULL);
-        current_size = strftime(data_time_string, 20, "%X", localtime(&t));
+        current_size = format_timestamp(data_time_string, sizeof(data_time_string), "%X");
 #else
         unsigned long time = osKernelSysTick();
         current_size       = sprintf(data_time_string, "%12lu", time);
@@ -51,8 +70,7 @@ void rlog_print(int level, const char *format, ...)
     else if (log_level & (RLOG_TIME_PRINT | RLOG_DATA_AND_TIME_PRINT))
     {
 #if defined(RLOG_FOR_APPLE) || defined(RLOG_FOR_UNIX) || defined(RLOG_FOR_WINDOWS)
-        time_t t     = time(NULL);
-        current_size = strftime(data_time_string, 20, "%x-%X ", localtime(&t));
+        current_size = format_timestamp(data_time_string, sizeof(data_time_string), "%x-%X");
 #else
         unsigned long time = osKernelSysTick();
         current_size       = sprintf(data_time_string, "%12lu", time);

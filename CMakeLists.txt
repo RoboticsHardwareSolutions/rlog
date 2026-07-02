@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(rlog C)
 set(CMAKE_C_STANDARD 11)
 
+option(RLOG_USE_PRECISE_TIMESTAMPS "Use precise timestamps (affects Apple, Unix, and Windows platforms)" OFF)
 
 add_library(${PROJECT_NAME} rlog.c rlog.h)
 
@@ -21,4 +22,6 @@ if (UNIX AND NOT APPLE)
     target_compile_definitions(rlog PUBLIC -DRLOG_FOR_UNIX)
 endif ()
 
-
+if (RLOG_USE_PRECISE_TIMESTAMPS)
+    target_compile_definitions(rlog PRIVATE RLOG_USE_PRECISE_TIMESTAMPS)
+endif()
