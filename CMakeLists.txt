@@ -22,6 +22,6 @@ if (UNIX AND NOT APPLE)
     target_compile_definitions(rlog PUBLIC -DRLOG_FOR_UNIX)
 endif ()
 
-if (RLOG_USE_PRECISE_TIMESTAPMS)
+if (RLOG_USE_PRECISE_TIMESTAMPS)
     target_compile_definitions(rlog PRIVATE RLOG_USE_PRECISE_TIMESTAMPS)
 endif()
