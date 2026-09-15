@@ -1,9 +1,4 @@
-#ifndef __RLOG_H__
-#define __RLOG_H__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 #define RLOG_ERROR_PRINT 0x1
 #define RLOG_WARNING_PRINT 0x2
@@ -54,7 +49,7 @@ void rlog_set_level(int level);
  * @param format
  * @param ...
  */
-void rlog_print(int level, const char *format, ...);
+void rlog_print(int level, const char* format, ...);
 
 /**
  * @brief Logs to file. Call rlog_set_stream(logs_to_file) first.
@@ -63,7 +58,7 @@ void rlog_print(int level, const char *format, ...);
  * @param format
  * @param ...
  */
-void rlog_to_file(int level, const char *format, ...);
+void rlog_to_file(int level, const char* format, ...);
 
 #if defined(RLOG_BUFFER_SUPPORT)
 
@@ -77,7 +72,7 @@ size_t rlog_data_available(void);
  * @param count - amount of data to be read
  * @return - readed amount data
  */
-size_t rlog_read_from_buffer(void *data, size_t count);
+size_t rlog_read_from_buffer(void* data, size_t count);
 
 /*
  * use for delete memory and mutex rlog
@@ -85,9 +80,3 @@ size_t rlog_read_from_buffer(void *data, size_t count);
 void rlog_destroy(void);
 
 #endif  // defined(RLOG_BUFFER_SUPPORT)
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
